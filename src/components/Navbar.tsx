@@ -1,18 +1,29 @@
-// src/components/NavBar.tsx
 import React from "react";
 import { Link } from "react-router-dom";
 
 const NavBar: React.FC = () => {
   return (
-    <nav className="bg-blue-500 p-4">
+    <nav className="bg-blue-600 p-4 shadow-md">
       <div className="container mx-auto flex justify-between items-center">
-        <h1 className="text-white text-3xl font-bold">YourLibrary</h1>
-        <div>
-          <Link to="/publisher" className="text-white mx-4 hover:underline">
-            Publisher
+        <h1 className="text-white text-3xl font-bold">BookStore</h1>
+        <div className="space-x-6">
+          <Link to="/" className="text-white text-lg hover:underline">
+            Home
           </Link>
-          <Link to="/visitor" className="text-white mx-4 hover:underline">
-            Visitor
+          <Link to="/genres" className="text-white text-lg hover:underline">
+            Genres
+          </Link>
+          <Link
+            to="/new-arrivals"
+            className="text-white text-lg hover:underline"
+          >
+            New Arrivals
+          </Link>
+          <Link
+            to="/best-sellers"
+            className="text-white text-lg hover:underline"
+          >
+            Best Sellers
           </Link>
         </div>
       </div>
