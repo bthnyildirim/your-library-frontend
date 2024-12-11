@@ -1,4 +1,3 @@
-// src/components/BookList.tsx
 import React, { useEffect, useState } from "react";
 import BookCard from "./BookCard";
 
@@ -6,7 +5,7 @@ interface Book {
   id: number;
   title: string;
   author: string;
-  coverImage: string; // If available, or you can use a placeholder
+  coverImage: string;
 }
 
 const BookList: React.FC = () => {
@@ -31,7 +30,7 @@ const BookList: React.FC = () => {
               key={book.id}
               title={book.title}
               author={book.author}
-              coverImage="https://via.placeholder.com/150" // Replace with actual cover image URL if available
+              coverImage={book.coverImage || "https://via.placeholder.com/150"}
             />
           ))}
         </div>
