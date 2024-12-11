@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import BookCard from "../components/BookCard"; // Assuming BookCard is in the same folder
+import BookCard from "../components/BookCard";
 
 // Define the Book interface
 interface Book {
@@ -28,15 +28,17 @@ const Publisher: React.FC = () => {
     title: "",
     author: "",
     image: null,
-    rating: 0, // Default rating
-    price: "", // Default price
+    rating: 0,
+    price: "",
   });
   const [editBook, setEditBook] = useState<Book | null>(null);
 
+  // Fetch books on component mount
   useEffect(() => {
     fetchBooks();
   }, []);
 
+  // Fetch all books from the API
   const fetchBooks = async () => {
     try {
       const response = await axios.get(
@@ -44,10 +46,11 @@ const Publisher: React.FC = () => {
       );
       setBooks(response.data);
     } catch (error) {
-      console.error("Error fetching books:", error);
+      alert("Error fetching books.");
     }
   };
 
+  // Create a new book
   const createBook = async () => {
     if (
       !newBook.title ||
@@ -62,11 +65,9 @@ const Publisher: React.FC = () => {
     const formData = new FormData();
     formData.append("title", newBook.title);
     formData.append("author", newBook.author);
-    formData.append("rating", String(newBook.rating)); // Add rating
-    formData.append("price", newBook.price); // Add price
-    if (newBook.image) {
-      formData.append("image", newBook.image);
-    }
+    formData.append("rating", String(newBook.rating));
+    formData.append("price", newBook.price);
+    if (newBook.image) formData.append("image", newBook.image);
 
     try {
       const response = await axios.post(
@@ -74,14 +75,28 @@ const Publisher: React.FC = () => {
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
-      setBooks([...books, response.data]);
+      setBooks((prevBooks) => [...prevBooks, response.data]);
+      resetNewBookForm();
       setShowCreateBookModal(false);
-      setNewBook({ title: "", author: "", image: null, rating: 0, price: "" });
     } catch (error) {
-      console.error("Error creating book:", error);
+      alert("Error creating book.");
     }
   };
 
+  // Delete a book
+  const deleteBook = async (id: number) => {
+    console.log("deleteBook: Attempting to delete book with ID:", id);
+    try {
+      await axios.delete(`${process.env.REACT_APP_API_URL}/books/${id}`);
+      console.log("deleteBook: Book deleted successfully.");
+      setBooks((prevBooks) => prevBooks.filter((book) => book.id !== id));
+    } catch (error) {
+      console.error("deleteBook: Error deleting book:", error);
+      alert("Error deleting book.");
+    }
+  };
+
+  // Update an existing book
   const updateBook = async () => {
     if (!editBook || !editBook.title || !editBook.author) {
       alert("Both title and author are required for updating.");
@@ -91,11 +106,9 @@ const Publisher: React.FC = () => {
     const formData = new FormData();
     formData.append("title", editBook.title);
     formData.append("author", editBook.author);
-    formData.append("rating", String(editBook.rating)); // Add rating
-    formData.append("price", editBook.price || ""); // Add price
-    if (editBook.image) {
-      formData.append("image", editBook.image);
-    }
+    formData.append("rating", String(editBook.rating || 0));
+    formData.append("price", editBook.price || "");
+    if (editBook.image) formData.append("image", editBook.image);
 
     try {
       const response = await axios.put(
@@ -103,28 +116,27 @@ const Publisher: React.FC = () => {
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
-      setBooks(
-        books.map((book) => (book.id === editBook.id ? response.data : book))
+      setBooks((prevBooks) =>
+        prevBooks.map((book) =>
+          book.id === editBook.id ? response.data : book
+        )
       );
       setEditBook(null);
     } catch (error) {
-      console.error("Error updating book:", error);
+      alert("Error updating book.");
     }
   };
 
-  const deleteBook = async (id: number) => {
-    try {
-      await axios.delete(`${process.env.REACT_APP_API_URL}/books/${id}`);
-      setBooks(books.filter((book) => book.id !== id));
-    } catch (error) {
-      console.error("Error deleting book:", error);
-    }
+  // Reset the create book form
+  const resetNewBookForm = () => {
+    setNewBook({ title: "", author: "", image: null, rating: 0, price: "" });
   };
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-6">Publisher Dashboard</h1>
 
+      {/* Create Book Button */}
       <button
         className="bg-blue-500 text-white px-4 py-2 rounded mb-6"
         onClick={() => setShowCreateBookModal(true)}
@@ -132,11 +144,11 @@ const Publisher: React.FC = () => {
         Create Book
       </button>
 
+      {/* Create Book Modal */}
       {showCreateBookModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-white p-6 rounded shadow-lg w-96">
             <h2 className="text-xl font-bold mb-4">Add New Book</h2>
-
             <input
               type="text"
               placeholder="Title"
@@ -155,8 +167,15 @@ const Publisher: React.FC = () => {
               }
               className="w-full p-2 border rounded mb-4"
             />
-
-            {/* Rating Input */}
+            <input
+              type="number"
+              placeholder="Price"
+              value={newBook.price}
+              onChange={(e) =>
+                setNewBook({ ...newBook, price: e.target.value })
+              }
+              className="w-full p-2 border rounded mb-4"
+            />
             <select
               value={newBook.rating}
               onChange={(e) =>
@@ -171,18 +190,6 @@ const Publisher: React.FC = () => {
                 </option>
               ))}
             </select>
-
-            {/* Price Input */}
-            <input
-              type="number"
-              placeholder="Price"
-              value={newBook.price}
-              onChange={(e) =>
-                setNewBook({ ...newBook, price: e.target.value })
-              }
-              className="w-full p-2 border rounded mb-4"
-            />
-
             <input
               type="file"
               onChange={(e) =>
@@ -201,13 +208,84 @@ const Publisher: React.FC = () => {
                 className="bg-green-500 text-white px-4 py-2 rounded"
                 onClick={createBook}
               >
-                Create
+                Save
               </button>
             </div>
           </div>
         </div>
       )}
 
+      {/* Edit Book Modal */}
+      {editBook && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded shadow-lg w-96">
+            <h2 className="text-xl font-bold mb-4">Edit Book</h2>
+            <input
+              type="text"
+              value={editBook.title}
+              onChange={(e) =>
+                setEditBook({ ...editBook, title: e.target.value })
+              }
+              className="w-full p-2 border rounded mb-4"
+            />
+            <input
+              type="text"
+              value={editBook.author}
+              onChange={(e) =>
+                setEditBook({ ...editBook, author: e.target.value })
+              }
+              className="w-full p-2 border rounded mb-4"
+            />
+            <input
+              type="number"
+              value={editBook.price || ""}
+              onChange={(e) =>
+                setEditBook({ ...editBook, price: e.target.value })
+              }
+              className="w-full p-2 border rounded mb-4"
+            />
+            <select
+              value={editBook.rating || 0}
+              onChange={(e) =>
+                setEditBook({ ...editBook, rating: Number(e.target.value) })
+              }
+              className="w-full p-2 border rounded mb-4"
+            >
+              {[1, 2, 3, 4, 5].map((r) => (
+                <option key={r} value={r}>
+                  {r} Star{r > 1 && "s"}
+                </option>
+              ))}
+            </select>
+            <input
+              type="file"
+              onChange={(e) =>
+                setEditBook({
+                  ...editBook,
+                  image: e.target.files?.[0] || null,
+                })
+              }
+              className="w-full mb-4"
+            />
+            <div className="flex justify-end space-x-4">
+              <button
+                className="bg-gray-400 text-white px-4 py-2 rounded"
+                onClick={() => setEditBook(null)}
+              >
+                Cancel
+              </button>
+              <button
+                className="bg-green-500 text-white px-4 py-2 rounded"
+                onClick={updateBook}
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Book List */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {books.map((book) => (
           <BookCard
