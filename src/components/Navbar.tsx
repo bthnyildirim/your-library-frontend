@@ -10,7 +10,7 @@ const NavBar: React.FC = () => {
           <Link to="/" className="text-white text-lg hover:underline">
             Home
           </Link>
-          <Link to="/genres" className="text-white text-lg hover:underline">
+          <Link to="/publisher" className="text-white text-lg hover:underline">
             Publisher
           </Link>
           <Link
