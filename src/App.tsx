@@ -5,16 +5,22 @@ import NavBar from "./components/Navbar";
 import Publisher from "./pages/Publisher";
 import Visitor from "./pages/Visitor";
 import Home from "./pages/Home";
+import Footer from "./components/Footer";
 
 const App: React.FC = () => {
   return (
     <Router>
-      <NavBar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/publisher" element={<Publisher />} />
-        <Route path="/visitor" element={<Visitor />} />
-      </Routes>
+      <div className="flex flex-col min-h-screen">
+        <NavBar />
+        <div className="flex-grow">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/publisher" element={<Publisher />} />
+            <Route path="/visitor" element={<Visitor />} />
+          </Routes>
+        </div>
+        <Footer />
+      </div>
     </Router>
   );
 };

@@ -11,13 +11,13 @@ const NavBar: React.FC = () => {
             Home
           </Link>
           <Link to="/genres" className="text-white text-lg hover:underline">
-            Genres
+            Publisher
           </Link>
           <Link
             to="/new-arrivals"
             className="text-white text-lg hover:underline"
           >
-            New Arrivals
+            Contact
           </Link>
           <Link
             to="/best-sellers"
