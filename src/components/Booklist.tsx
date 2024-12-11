@@ -6,6 +6,8 @@ interface Book {
   title: string;
   author: string;
   coverImage: string;
+  price: string;
+  rating: number;
 }
 
 const BookList: React.FC = () => {
@@ -31,6 +33,8 @@ const BookList: React.FC = () => {
               title={book.title}
               author={book.author}
               coverImage={book.coverImage || "https://via.placeholder.com/150"}
+              price={book.price}
+              rating={book.rating}
             />
           ))}
         </div>

@@ -6,7 +6,9 @@ interface Book {
   id: number;
   title: string;
   author: string;
-  coverImage: string; // Use a placeholder if not available
+  coverImage: string;
+  price: string;
+  rating: number;
 }
 
 const Home: React.FC = () => {
@@ -48,7 +50,9 @@ const Home: React.FC = () => {
                   key={book.id}
                   title={book.title}
                   author={book.author}
-                  coverImage="https://via.placeholder.com/150" // Replace with actual cover image URL if available
+                  coverImage="https://via.placeholder.com/150"
+                  price={book.price}
+                  rating={book.rating}
                 />
               ))
             ) : (
