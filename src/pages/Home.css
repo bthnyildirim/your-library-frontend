@@ -1,0 +1,17 @@
+.slick-prev::before,
+.slick-next::before {
+  color: #4a90e2;
+  font-size: 20px;
+}
+
+.slick-slide > div {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.book-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}

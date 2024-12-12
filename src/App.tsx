@@ -7,6 +7,8 @@ import Home from "./pages/Home";
 import Footer from "./components/Footer";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import ContactPage from "./pages/Contact";
+import Cart from "./pages/Cart";
 
 const App: React.FC = () => {
   return (
@@ -17,6 +19,8 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/publisher" element={<Publisher />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/cart" element={<Cart />} />
           </Routes>
         </div>
         <Footer />

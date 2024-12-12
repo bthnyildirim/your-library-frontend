@@ -3,6 +3,7 @@ import Slider from "react-slick"; // Import Slider from react-slick
 import "slick-carousel/slick/slick.css"; // Import Slick carousel styles
 import "slick-carousel/slick/slick-theme.css"; // Import Slick theme styles
 import BookCard from "../components/BookCard";
+import "./Home.css";
 
 interface Book {
   id: number;
@@ -74,7 +75,7 @@ const Home: React.FC = () => {
       {/* Book Section with Carousel */}
       <section className="py-12 bg-gray-100">
         <div className="max-w-6xl mx-auto px-4">
-          <Slider {...settings}>
+          <Slider {...settings} className="custom-carousel">
             {books.length > 0 ? (
               books.map((book) => {
                 let coverImage: string;
@@ -84,30 +85,28 @@ const Home: React.FC = () => {
 
                 if (!book.imagePath || book.imagePath === "undefined") {
                   console.warn(`No image path for book: ${book.title}`);
-                  coverImage = "https://via.placeholder.com/150"; // Default placeholder image
+                  coverImage = "https://via.placeholder.com/150";
                 } else {
-                  // Check if imagePath already contains the full URL (http://localhost:5005)
                   if (book.imagePath.startsWith("http://localhost:5005")) {
-                    coverImage = book.imagePath; // Use the full URL as is
+                    coverImage = book.imagePath;
                     console.log("Using Full URL:", coverImage);
                   } else if (
                     book.imagePath.startsWith("http://") ||
                     book.imagePath.startsWith("https://")
                   ) {
-                    coverImage = book.imagePath; // Full URL from external source
+                    coverImage = book.imagePath;
                     console.log("Using Direct URL:", coverImage);
                   } else if (book.imagePath.startsWith("/uploads")) {
-                    coverImage = `http://localhost:5005${book.imagePath}`; // Add base URL if it's a relative /uploads path
+                    coverImage = `http://localhost:5005${book.imagePath}`;
                     console.log("Using Full URL with /uploads:", coverImage);
                   } else {
-                    // Otherwise, treat it as a filename and prepend the base URL
                     coverImage = `http://localhost:5005/uploads/${book.imagePath}`;
                     console.log("Constructed URL:", coverImage);
                   }
                 }
 
                 return (
-                  <div key={book.id}>
+                  <div key={book.id} className="h-full flex items-stretch">
                     <BookCard
                       title={book.title}
                       author={book.author}

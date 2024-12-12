@@ -21,19 +21,17 @@ const BookCard: React.FC<BookProps> = ({
   onDelete,
   onUpdate,
 }) => {
-  // Define the full URL for the coverImage
+  // Generate image URL
   const imageUrl = coverImage
     ? coverImage.startsWith("/uploads/") || coverImage.startsWith("http")
-      ? coverImage // No need to prepend again
+      ? coverImage
       : `${
           process.env.REACT_APP_API_URL?.replace("/api", "") ||
           "http://localhost:5005"
-        }/uploads/${coverImage}` // Append /uploads/ if needed
+        }/uploads/${coverImage}`
     : "https://via.placeholder.com/150";
 
-  console.log("coverImage:", coverImage);
-  console.log("Generated imageUrl:", imageUrl);
-
+  // Render star ratings
   const renderStars = (rating: number) => {
     const fullStars = Math.floor(rating);
     const emptyStars = 5 - fullStars;
@@ -71,7 +69,7 @@ const BookCard: React.FC<BookProps> = ({
   };
 
   return (
-    <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+    <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex flex-col h-full book-card">
       <a href="#">
         {coverImage ? (
           <img
@@ -86,7 +84,7 @@ const BookCard: React.FC<BookProps> = ({
           </div>
         )}
       </a>
-      <div className="px-5 pb-5">
+      <div className="px-5 pb-5 flex-grow flex flex-col">
         <a href="#">
           <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
             {title}
@@ -99,20 +97,14 @@ const BookCard: React.FC<BookProps> = ({
             {rating.toFixed(1)}
           </span>
         </div>
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mt-auto">
           <span className="text-3xl font-bold text-gray-900 dark:text-white">
             {price}
           </span>
           {isPublisher ? (
             <div className="flex space-x-2">
               <button
-                onClick={() => {
-                  console.log("Update button clicked!");
-                  if (onUpdate) {
-                    console.log("Calling onUpdate function...");
-                    onUpdate(); // Call onUpdate only if it's defined
-                  }
-                }}
+                onClick={onUpdate}
                 className="bg-yellow-500 text-white px-4 py-2 rounded"
               >
                 Update
