@@ -1,4 +1,3 @@
-// src/pages/Home.tsx
 import React, { useEffect, useState } from "react";
 import BookCard from "../components/BookCard";
 
@@ -6,7 +5,7 @@ interface Book {
   id: number;
   title: string;
   author: string;
-  coverImage: string;
+  imagePath: string | null;
   price: string;
   rating: number;
 }
@@ -20,6 +19,7 @@ const Home: React.FC = () => {
         const response = await fetch("http://localhost:5005/api/books");
         const data = await response.json();
         setBooks(data);
+        console.log("Fetched Books:", data);
       } catch (error) {
         console.error("Error fetching books:", error);
       }
@@ -45,16 +45,47 @@ const Home: React.FC = () => {
         <div className="max-w-6xl mx-auto px-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             {books.length > 0 ? (
-              books.map((book) => (
-                <BookCard
-                  key={book.id}
-                  title={book.title}
-                  author={book.author}
-                  coverImage="https://via.placeholder.com/150"
-                  price={book.price}
-                  rating={book.rating}
-                />
-              ))
+              books.map((book) => {
+                let coverImage: string;
+
+                console.log("Processing Book:", book);
+                console.log("Original imagePath:", book.imagePath);
+
+                if (!book.imagePath || book.imagePath === "undefined") {
+                  console.warn(`No image path for book: ${book.title}`);
+                  coverImage = "https://via.placeholder.com/150"; // Default placeholder image
+                } else {
+                  // Check if imagePath already contains the full URL (http://localhost:5005)
+                  if (book.imagePath.startsWith("http://localhost:5005")) {
+                    coverImage = book.imagePath; // Use the full URL as is
+                    console.log("Using Full URL:", coverImage);
+                  } else if (
+                    book.imagePath.startsWith("http://") ||
+                    book.imagePath.startsWith("https://")
+                  ) {
+                    coverImage = book.imagePath; // Full URL from external source
+                    console.log("Using Direct URL:", coverImage);
+                  } else if (book.imagePath.startsWith("/uploads")) {
+                    coverImage = `http://localhost:5005${book.imagePath}`; // Add base URL if it's a relative /uploads path
+                    console.log("Using Full URL with /uploads:", coverImage);
+                  } else {
+                    // Otherwise, treat it as a filename and prepend the base URL
+                    coverImage = `http://localhost:5005/uploads/${book.imagePath}`;
+                    console.log("Constructed URL:", coverImage);
+                  }
+                }
+
+                return (
+                  <BookCard
+                    key={book.id}
+                    title={book.title}
+                    author={book.author}
+                    coverImage={coverImage}
+                    price={book.price}
+                    rating={book.rating}
+                  />
+                );
+              })
             ) : (
               <div className="col-span-full text-center text-gray-500">
                 No books available

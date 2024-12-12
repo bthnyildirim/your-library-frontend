@@ -17,13 +17,23 @@ const BookList: React.FC = () => {
     const fetchBooks = async () => {
       try {
         const response = await fetch("http://localhost:5005/api/books");
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
         const data = await response.json();
+
+        console.log("Fetched books in BookList:", data);
+
+        // Verify coverImage structure for each book
+        data.forEach((book: Book) => {
+          console.log(`Book ID: ${book.id}, CoverImage: ${book.coverImage}`);
+        });
+
         setBooks(data);
       } catch (error) {
         console.error("Failed to fetch books:", error);
       }
     };
-
     fetchBooks();
   }, []);
 
@@ -34,16 +44,26 @@ const BookList: React.FC = () => {
           {books.map((book) => {
             // Dynamically construct the coverImage URL
             const coverImage = book.coverImage
-              ? `${
-                  process.env.REACT_APP_API_URL || "http://localhost:5005"
-                }/uploads/${book.coverImage}`
+              ? book.coverImage.startsWith("/uploads/")
+                ? `${
+                    process.env.REACT_APP_API_URL?.replace("/api", "") ||
+                    "http://localhost:5005"
+                  }${book.coverImage}` // Use full path if already starts with /uploads/
+                : `${
+                    process.env.REACT_APP_API_URL?.replace("/api", "") ||
+                    "http://localhost:5005"
+                  }/uploads/${book.coverImage}` // Append /uploads/ if needed
               : "https://via.placeholder.com/150";
+
+            console.log("coverImage:", book.coverImage);
+            console.log("Generated coverImage URL:", coverImage);
+
             return (
               <BookCard
                 key={book.id}
                 title={book.title}
                 author={book.author}
-                coverImage={book.coverImage}
+                coverImage={coverImage}
                 price={book.price}
                 rating={book.rating}
               />

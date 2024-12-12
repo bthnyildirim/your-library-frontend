@@ -287,19 +287,34 @@ const Publisher: React.FC = () => {
 
       {/* Book List */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {books.map((book) => (
-          <BookCard
-            key={book.id}
-            title={book.title}
-            author={book.author}
-            coverImage={book.imagePath || null}
-            rating={book.rating || 0}
-            price={book.price || "$0.00"}
-            isPublisher={true}
-            onDelete={() => deleteBook(book.id)}
-            onUpdate={() => setEditBook(book)}
-          />
-        ))}
+        {books.map((book) => {
+          // Dynamically construct the coverImage URL
+          const coverImage = book.imagePath
+            ? book.imagePath.startsWith("/uploads/")
+              ? `${
+                  process.env.REACT_APP_API_URL?.replace("/api", "") ||
+                  "http://localhost:5005"
+                }${book.imagePath}`
+              : `${
+                  process.env.REACT_APP_API_URL?.replace("/api", "") ||
+                  "http://localhost:5005"
+                }/uploads/${book.imagePath}`
+            : "https://via.placeholder.com/150";
+
+          return (
+            <BookCard
+              key={book.id}
+              title={book.title}
+              author={book.author}
+              coverImage={coverImage}
+              rating={book.rating || 0}
+              price={book.price || "$0.00"}
+              isPublisher={true}
+              onDelete={() => deleteBook(book.id)}
+              onUpdate={() => setEditBook(book)}
+            />
+          );
+        })}
       </div>
     </div>
   );

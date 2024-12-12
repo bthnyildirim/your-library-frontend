@@ -23,16 +23,13 @@ const BookCard: React.FC<BookProps> = ({
 }) => {
   // Define the full URL for the coverImage
   const imageUrl = coverImage
-    ? coverImage.startsWith("/uploads/") // If `coverImage` already includes the full uploads path
-      ? `${
-          process.env.REACT_APP_API_URL?.replace("/api", "") ||
-          "http://localhost:5005"
-        }${coverImage}` // Prepend only the base URL
+    ? coverImage.startsWith("/uploads/") || coverImage.startsWith("http")
+      ? coverImage // No need to prepend again
       : `${
           process.env.REACT_APP_API_URL?.replace("/api", "") ||
           "http://localhost:5005"
-        }/uploads/${coverImage}` // Otherwise, construct the full path
-    : "https://via.placeholder.com/150"; // Fallback for missing images
+        }/uploads/${coverImage}` // Append /uploads/ if needed
+    : "https://via.placeholder.com/150";
 
   console.log("coverImage:", coverImage);
   console.log("Generated imageUrl:", imageUrl);

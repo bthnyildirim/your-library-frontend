@@ -3,7 +3,6 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import NavBar from "./components/Navbar";
 import Publisher from "./pages/Publisher";
-import Visitor from "./pages/Visitor";
 import Home from "./pages/Home";
 import Footer from "./components/Footer";
 
@@ -16,7 +15,6 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/publisher" element={<Publisher />} />
-            <Route path="/visitor" element={<Visitor />} />
           </Routes>
         </div>
         <Footer />
