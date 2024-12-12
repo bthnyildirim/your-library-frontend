@@ -23,7 +23,7 @@ const NavBar: React.FC = () => {
             to="/best-sellers"
             className="text-white text-lg hover:underline"
           >
-            Best Sellers
+            View Cart
           </Link>
         </div>
       </div>

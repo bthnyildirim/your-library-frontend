@@ -21,6 +21,22 @@ const BookCard: React.FC<BookProps> = ({
   onDelete,
   onUpdate,
 }) => {
+  // Define the full URL for the coverImage
+  const imageUrl = coverImage
+    ? coverImage.startsWith("/uploads/") // If `coverImage` already includes the full uploads path
+      ? `${
+          process.env.REACT_APP_API_URL?.replace("/api", "") ||
+          "http://localhost:5005"
+        }${coverImage}` // Prepend only the base URL
+      : `${
+          process.env.REACT_APP_API_URL?.replace("/api", "") ||
+          "http://localhost:5005"
+        }/uploads/${coverImage}` // Otherwise, construct the full path
+    : "https://via.placeholder.com/150"; // Fallback for missing images
+
+  console.log("coverImage:", coverImage);
+  console.log("Generated imageUrl:", imageUrl);
+
   const renderStars = (rating: number) => {
     const fullStars = Math.floor(rating);
     const emptyStars = 5 - fullStars;
@@ -63,8 +79,9 @@ const BookCard: React.FC<BookProps> = ({
         {coverImage ? (
           <img
             className="p-8 rounded-t-lg"
-            src={coverImage}
+            src={imageUrl}
             alt={`${title} cover`}
+            style={{ maxWidth: "100%", height: "auto" }}
           />
         ) : (
           <div className="p-8 bg-gray-200 rounded-t-lg flex items-center justify-center h-48">
