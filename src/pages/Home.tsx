@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import Slider from "react-slick"; // Import Slider from react-slick
+import "slick-carousel/slick/slick.css"; // Import Slick carousel styles
+import "slick-carousel/slick/slick-theme.css"; // Import Slick theme styles
 import BookCard from "../components/BookCard";
 
 interface Book {
@@ -28,6 +31,34 @@ const Home: React.FC = () => {
     fetchBooks();
   }, []);
 
+  // Slider settings
+  const settings = {
+    infinite: true,
+    speed: 500,
+    slidesToShow: 4,
+    slidesToScroll: 1,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 3,
+        },
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 2,
+        },
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+        },
+      },
+    ],
+  };
+
   return (
     <div>
       {/* Header Section */}
@@ -40,10 +71,10 @@ const Home: React.FC = () => {
         </div>
       </header>
 
-      {/* Book Section */}
+      {/* Book Section with Carousel */}
       <section className="py-12 bg-gray-100">
         <div className="max-w-6xl mx-auto px-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+          <Slider {...settings}>
             {books.length > 0 ? (
               books.map((book) => {
                 let coverImage: string;
@@ -76,14 +107,15 @@ const Home: React.FC = () => {
                 }
 
                 return (
-                  <BookCard
-                    key={book.id}
-                    title={book.title}
-                    author={book.author}
-                    coverImage={coverImage}
-                    price={book.price}
-                    rating={book.rating}
-                  />
+                  <div key={book.id}>
+                    <BookCard
+                      title={book.title}
+                      author={book.author}
+                      coverImage={coverImage}
+                      price={book.price}
+                      rating={book.rating}
+                    />
+                  </div>
                 );
               })
             ) : (
@@ -91,7 +123,7 @@ const Home: React.FC = () => {
                 No books available
               </div>
             )}
-          </div>
+          </Slider>
         </div>
       </section>
     </div>

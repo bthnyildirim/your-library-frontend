@@ -13,7 +13,9 @@
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.0.2",
     "react-scripts": "5.0.1",
+    "react-slick": "^0.30.2",
     "router": "^1.3.8",
+    "slick-carousel": "^1.8.1",
     "web-vitals": "^4.2.4"
   },
   "scripts": {
@@ -46,6 +48,7 @@
     "@types/jest": "^29.5.14",
     "@types/react-dom": "^19.0.2",
     "@types/react-router-dom": "^5.3.3",
+    "@types/react-slick": "^0.23.13",
     "@types/testing-library__react": "^10.0.1",
     "autoprefixer": "^10.4.20",
     "eslint": "^8.57.1",
