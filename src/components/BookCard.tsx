@@ -99,7 +99,7 @@ const BookCard: React.FC<BookProps> = ({
         </div>
         <div className="flex items-center justify-between mt-auto">
           <span className="text-3xl font-bold text-gray-900 dark:text-white">
-            {price}
+            €{price}
           </span>
           {isPublisher ? (
             <div className="flex space-x-2">

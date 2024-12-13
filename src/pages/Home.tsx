@@ -20,7 +20,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const response = await fetch("http://localhost:5005/api/books");
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/books`);
         const data = await response.json();
         setBooks(data);
         console.log("Fetched Books:", data);
